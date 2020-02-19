@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -31,6 +32,8 @@ public final class VentanaPokedex extends javax.swing.JFrame {
     Statement estado;
     ResultSet resultadoConsulta;
     Connection conexion;
+    
+    HashMap<String, Pokemon> listaPokemons = new HashMap();
     
     
     @Override
@@ -82,6 +85,21 @@ public final class VentanaPokedex extends javax.swing.JFrame {
                             "root",
                             "");
             estado = conexion.createStatement();
+            resultadoConsulta = estado.executeQuery("Select * from pokemon");
+            //recorremos el array del resultado uno a uno
+            //para ir cargándolo en el Hashmap
+            
+            while(resultadoConsulta.next()){
+                Pokemon p = new Pokemon();
+                p.nombre = resultadoConsulta.getString(2);
+                p.especie = resultadoConsulta.getString(5);
+                p.peso = resultadoConsulta.getDouble(4);
+                p.movimiento1 = resultadoConsulta.getString("movimiento1");
+                p.preEvolucion = resultadoConsulta.getInt("preEvolucion");
+                p.posEvolucion = resultadoConsulta.getInt("posEvolucion");
+                
+                listaPokemons.put(resultadoConsulta.getString(1), p);
+            }
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -295,7 +313,7 @@ public final class VentanaPokedex extends javax.swing.JFrame {
                                 .addComponent(peso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(habitatPokemon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(altura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(tipo2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(tipo2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(idPokemon, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -374,11 +392,16 @@ public final class VentanaPokedex extends javax.swing.JFrame {
                 altura.setText(resultadoConsulta.getString(3) + " m");
                 especiePokemon.setText(resultadoConsulta.getString(5));
                 habitatPokemon.setText(resultadoConsulta.getString(6));
-                tipo1.setText(resultadoConsulta.getString(7));
+                String pTipo = resultadoConsulta.getString(7);
+                tipo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                tipo1.setOpaque(true);
                 if("".equals(resultadoConsulta.getString(8))){
-                    tipo2.setText("No tiene");
+                    String sTipo = "No tiene";
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
                 }else{
-                    tipo2.setText(resultadoConsulta.getString(8));
+                    String sTipo = resultadoConsulta.getString(8);
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + sTipo + ".png")));
+                    tipo2.setOpaque(true);
                 }
                 descrip.setText("<html>" + resultadoConsulta.getString(16) + "</html>");
                 
@@ -398,6 +421,11 @@ public final class VentanaPokedex extends javax.swing.JFrame {
     }//GEN-LAST:event_izqActionPerformed
 
     private void derActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_derActionPerformed
+        
+        contador ++;
+        if (contador >=150){
+            contador = 150;
+        }
         try {
             resultadoConsulta = estado.executeQuery("select * from pokemon where id=" + (contador+1));
             if(resultadoConsulta.next()){
@@ -407,13 +435,19 @@ public final class VentanaPokedex extends javax.swing.JFrame {
                 altura.setText(resultadoConsulta.getString(3) + " m");
                 especiePokemon.setText(resultadoConsulta.getString(5));
                 habitatPokemon.setText(resultadoConsulta.getString(6));
-                tipo1.setText(resultadoConsulta.getString(7));
+                String pTipo = resultadoConsulta.getString(7);
+                tipo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                tipo1.setOpaque(true);
                 if("".equals(resultadoConsulta.getString(8))){
-                    tipo2.setText("No tiene");
+                    String sTipo = "No tiene";
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
                 }else{
-                    tipo2.setText(resultadoConsulta.getString(8));
+                    String sTipo = resultadoConsulta.getString(8);
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + sTipo + ".png")));
+                    tipo2.setOpaque(true);
                 }
                 descrip.setText("<html>" + resultadoConsulta.getString(16) + "</html>");
+                
             }
             else{
                 nombrePokemon.setText("Este pokemon no figura en la pokedex");
@@ -421,11 +455,14 @@ public final class VentanaPokedex extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.err.println("Error con la base de datos");
         }
-        dibujaElPokemonQueEstaEnLaPosicion(contador);
-        contador ++;
-        if (contador >=649){
-            contador = 649;
-        }
+        
+        dibujaElPokemonQueEstaEnLaPosicion(contador);/*
+        Pokemon p = listaPokemons.get(String.valueOf(contador));
+        if(p != null){
+            nombrePokemon.setText(p.nombre);
+        }else{
+            nombrePokemon.setText("NO HAY DATOS");
+        }*/
         
     }//GEN-LAST:event_derActionPerformed
 

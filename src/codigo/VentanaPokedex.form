@@ -70,7 +70,7 @@
                                   <Component id="peso" max="32767" attributes="0"/>
                                   <Component id="habitatPokemon" max="32767" attributes="0"/>
                                   <Component id="altura" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="tipo2" max="32767" attributes="0"/>
+                                  <Component id="tipo2" alignment="1" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
