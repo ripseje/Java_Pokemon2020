@@ -88,7 +88,7 @@ public final class VentanaPokedex extends javax.swing.JFrame {
                             "root",
                             "");
             estado = conexion.createStatement();
-            resultadoConsulta = estado.executeQuery("Select * from pokemon");
+            resultadoConsulta = estado.executeQuery("select * from pokemon");
             //recorremos el array del resultado uno a uno
             //para ir cargándolo en el Hashmap
             
@@ -96,12 +96,22 @@ public final class VentanaPokedex extends javax.swing.JFrame {
                 Pokemon p = new Pokemon();
                 p.nombre = resultadoConsulta.getString(2);
                 p.especie = resultadoConsulta.getString(5);
-                p.peso = resultadoConsulta.getDouble(4);
-                p.movimiento1 = resultadoConsulta.getString("movimiento1");
-                p.preEvolucion = resultadoConsulta.getInt("preEvolucion");
-                p.posEvolucion = resultadoConsulta.getInt("posEvolucion");
+                p.peso = resultadoConsulta.getString(4);
+                p.preEvolucion = resultadoConsulta.getString(13);
+                p.posEvolucion = resultadoConsulta.getString(14);
+                p.id = resultadoConsulta.getString(1);
+                p.altura = resultadoConsulta.getString(3);
+                p.habitat = resultadoConsulta.getString(6);
+                p.tipo1 = resultadoConsulta.getString(7);
+                p.tipo2 = resultadoConsulta.getString(8);
+                p.movimiento1 = resultadoConsulta.getString(9);
+                p.movimiento2 = resultadoConsulta.getString(10);
+                p.movimiento3 = resultadoConsulta.getString(11);
+                p.movimiento4 = resultadoConsulta.getString(12);
+                p.descripcion = resultadoConsulta.getString(16);
                 
                 listaPokemons.put(resultadoConsulta.getString(1), p);
+                
             }
         }
         catch (Exception e){
@@ -347,10 +357,11 @@ public final class VentanaPokedex extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(imagenPokemon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(izq, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(der, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(verMas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(verMas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(izq, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(der, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(64, 64, 64))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -399,13 +410,38 @@ public final class VentanaPokedex extends javax.swing.JFrame {
 
     private void izqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_izqActionPerformed
         contador --;
-        imprimePokemon();
+        //imprimePokemon();
         
         
         if (contador <=0){
             contador = 1;
         }
-        
+        Pokemon p = listaPokemons.get(String.valueOf(contador));
+        dibujaElPokemonQueEstaEnLaPosicion(contador-1);
+        if(p != null){
+            idPokemon.setText(p.id);
+            nombrePokemon.setText(p.nombre);
+            altura.setText(p.altura);
+            peso.setText(p.peso);
+            especiePokemon.setText(p.especie);
+            habitatPokemon.setText(p.habitat);
+            String pTipo = p.tipo1;
+                tipo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                tipo1.setOpaque(true);
+                if("".equals(p.tipo2)){
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                }else{
+                    String sTipo = p.tipo2;
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + sTipo + ".png")));
+                    tipo2.setOpaque(true);
+                }
+            /*tipo1.setText(p.tipo1);
+            tipo2.setText(p.tipo2);*/
+            descrip.setText("<html>" + p.descripcion + "</html>");
+            
+        }else{
+            nombrePokemon.setText("NO HAY DATOS");
+        }
     }//GEN-LAST:event_izqActionPerformed
 
     private void derActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_derActionPerformed
@@ -414,13 +450,34 @@ public final class VentanaPokedex extends javax.swing.JFrame {
         if (contador >=150){
             contador = 150;
         }
-        imprimePokemon();/*
+        //imprimePokemon();
         Pokemon p = listaPokemons.get(String.valueOf(contador));
+        dibujaElPokemonQueEstaEnLaPosicion(contador-1);
         if(p != null){
+            idPokemon.setText(p.id);
             nombrePokemon.setText(p.nombre);
+            altura.setText(p.altura);
+            peso.setText(p.peso);
+            especiePokemon.setText(p.especie);
+            habitatPokemon.setText(p.habitat);
+            String pTipo = p.tipo1;
+                tipo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                tipo1.setOpaque(true);
+                if("".equals(p.tipo2)){
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                }else{
+                    String sTipo = p.tipo2;
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + sTipo + ".png")));
+                    tipo2.setOpaque(true);
+                }
+            /*tipo1.setText(p.tipo1);
+            tipo2.setText(p.tipo2);*/
+            descrip.setText("<html>" + p.descripcion + "</html>");
+            
         }else{
             nombrePokemon.setText("NO HAY DATOS");
-        }*/
+        }
+        
         
     }//GEN-LAST:event_derActionPerformed
 
@@ -430,7 +487,31 @@ public final class VentanaPokedex extends javax.swing.JFrame {
         } else{
             contador = 0;
         }
-        imprimePokemon();
+        Pokemon p = listaPokemons.get(String.valueOf(contador));
+        dibujaElPokemonQueEstaEnLaPosicion(contador);
+        if(p != null){
+            idPokemon.setText(p.id);
+            nombrePokemon.setText(p.nombre);
+            altura.setText(p.altura);
+            peso.setText(p.peso);
+            especiePokemon.setText(p.especie);
+            habitatPokemon.setText(p.habitat);
+            String pTipo = p.tipo1;
+                tipo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                tipo1.setOpaque(true);
+                if("".equals(p.tipo2)){
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + pTipo + ".png")));
+                }else{
+                    String sTipo = p.tipo2;
+                    tipo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tipos/" + sTipo + ".png")));
+                    tipo2.setOpaque(true);
+                }
+            /*tipo1.setText(p.tipo1);
+            tipo2.setText(p.tipo2);*/
+            descrip.setText("<html>" + p.descripcion + "</html>");
+        }else{
+            nombrePokemon.setText("NO HAY DATOS");
+        }
     }//GEN-LAST:event_verMasActionPerformed
     
     private void imprimePokemon(){

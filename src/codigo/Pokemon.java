@@ -10,10 +10,19 @@ package codigo;
  * @author Sergio
  */
 public class Pokemon {
+    public String id = "";
     public String nombre = "";
+    public String altura = "";
+    public String peso = "";
     public String especie = "";
+    public String habitat = "";
+    public String tipo1 = "";
+    public String tipo2 = "";
     public String movimiento1 = "";
-    public double peso = 0.0;
-    public int preEvolucion = 0;
-    public int posEvolucion = 0;
+    public String movimiento2 = "";
+    public String movimiento3 = "";
+    public String movimiento4 = "";
+    public String preEvolucion = "";
+    public String posEvolucion = "";
+    public String descripcion = "";
 }
